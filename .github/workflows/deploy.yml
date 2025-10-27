@@ -1,0 +1,29 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]  # 如果你的主分支是master，就改成master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v4
+
+      - name: 安装Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'  # 项目要求Node.js >=18.0.0
+
+      - name: 安装依赖
+        run: npm install  # 或者用pnpm install（如果npm失败的话）
+
+      - name: 构建项目
+        run: npm run build  # 构建生产版本
+
+      - name: 部署到GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist  # 部署dist文件夹里的内容
